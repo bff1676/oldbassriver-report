@@ -1,0 +1,60 @@
+{
+  "report_name": "Old Bass River Daily Fishing Report",
+  "location": "Bass River, Dennis & Yarmouth, Cape Cod",
+  "opening_note": "Cape Cod’s bite changes fast. Use this section for the real signal each morning, what your own crew, tackle counter, or trusted local boats are actually seeing before the crowds catch on.",
+  "hot_spots": [
+    {
+      "zone": "Bass River Mouth & West Wall",
+      "rating": "Hot",
+      "species": ["Striped bass", "Bluefish"],
+      "best_window": "First light through early outgoing tide",
+      "notes": "Fast-moving water, bait, and low-light feeding make this the cleanest everyday starting point for a report.",
+      "access": "Shore or small boat"
+    },
+    {
+      "zone": "Nantucket Sound Rips East of Bass River",
+      "rating": "Good",
+      "species": ["Striped bass", "Bluefish"],
+      "best_window": "Sunrise and tide changes",
+      "notes": "Strong option when wind stays manageable and you can hop on breaking fish or current edges early.",
+      "access": "Boat"
+    },
+    {
+      "zone": "South Side Beaches, West Dennis to Harwich",
+      "rating": "Watch",
+      "species": ["Schoolie bass", "Bluefish"],
+      "best_window": "Dawn, dusk, and after dark",
+      "notes": "A good backup line when the river is crowded or the open Sound gets sloppy later in the day.",
+      "access": "Shore"
+    },
+    {
+      "zone": "Monomoy / Stage Harbor Edge",
+      "rating": "Needs local confirmation",
+      "species": ["Striped bass", "Fluke", "Bluefish"],
+      "best_window": "Depends on tide and wind",
+      "notes": "Use only when you have same-day confirmation from a local boat, charter, or trusted contact.",
+      "access": "Boat"
+    }
+  ],
+  "what_is_working": [
+    "Topwater at first light when bait is present",
+    "Soft plastics through current seams",
+    "Jigs and bucktails once the sun gets up"
+  ],
+  "species_watch": [
+    "Striped bass",
+    "Bluefish",
+    "Fluke",
+    "Sea bass"
+  ],
+  "boating_notes": [
+    "If the southwest wind builds, the cleaner play is often early by boat and later from shore.",
+    "Use this section for any live ramp, fog, marina, or traffic notes you want on the site."
+  ],
+  "other_interest": [
+    "Bait movement",
+    "Water clarity",
+    "Any derby or tournament chatter worth flagging",
+    "Safety or closure notices"
+  ]
+}

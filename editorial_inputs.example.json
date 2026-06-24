@@ -1,0 +1,61 @@
+{
+  "report_name": "Old Bass River Daily Fishing Report",
+  "location": "Bass River, Dennis & Yarmouth, Cape Cod",
+  "opening_note": "Update this note each morning with what your own crew, customers, or trusted local contacts are actually seeing.",
+  "hot_spots": [
+    {
+      "zone": "Bass River Mouth & West Wall",
+      "rating": "Hot",
+      "species": ["Striped bass", "Bluefish"],
+      "best_window": "First light through early outgoing tide",
+      "notes": "Moving water and bait tend to concentrate fish here. Topwater early, then soft plastics or jigs once the sun gets up.",
+      "access": "Shore or small boat"
+    },
+    {
+      "zone": "Nantucket Sound Rips East of Bass River",
+      "rating": "Good",
+      "species": ["Striped bass", "Bluefish"],
+      "best_window": "Early morning and tide change",
+      "notes": "Watch for birds, nervous water, and fast current seams. Good zone to update with live intel every day.",
+      "access": "Boat"
+    },
+    {
+      "zone": "South Side Beaches, West Dennis to Harwich",
+      "rating": "Watch",
+      "species": ["Schoolie bass", "Bluefish"],
+      "best_window": "Dawn, dusk, and after dark",
+      "notes": "Useful fallback when the river is slow or traffic is heavy. Look for bait and cleaner water.",
+      "access": "Shore"
+    },
+    {
+      "zone": "Monomoy / Stage Harbor Edge",
+      "rating": "Needs local confirmation",
+      "species": ["Striped bass", "Fluke", "Bluefish"],
+      "best_window": "Depends on wind and tide",
+      "notes": "Strong option when reliable local reports are positive, but this should be updated from actual same-day intel.",
+      "access": "Boat"
+    }
+  ],
+  "what_is_working": [
+    "Topwater at first light when bait is present",
+    "Soft plastics on current seams",
+    "Bucktails or jigs when fish slide deeper"
+  ],
+  "species_watch": [
+    "Striped bass",
+    "Bluefish",
+    "Fluke",
+    "Sea bass",
+    "Nearshore tuna reports if available"
+  ],
+  "boating_notes": [
+    "Add any local ramp, mooring, marina, fog, or traffic notes here.",
+    "Call out if the Sound is better early than late because of afternoon southwest wind."
+  ],
+  "other_interest": [
+    "Local derby updates",
+    "Bait movement",
+    "Water clarity changes",
+    "Any closures or safety notices"
+  ]
+}
