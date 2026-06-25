@@ -6,6 +6,7 @@ from pathlib import Path
 import streamlit as st
 import streamlit.components.v1 as components
 
+from hubspot_publish import DEFAULT_CONFIG_PATH, HubSpotPublishError, config_exists, publish_bundle
 from report_engine import build_report_bundle, default_editorial, load_editorial, save_editorial, write_outputs
 
 ROOT = Path(__file__).parent
@@ -29,7 +30,7 @@ st.markdown(
 if "editorial" not in st.session_state:
     st.session_state.editorial = load_editorial() or default_editorial()
 
-st.markdown("<div class='obr-hero'><div class='obr-kicker'>41°40′N 70°11′W · Bass River · Cape Cod</div><div class='obr-title'>Old Bass River Daily Report Editor</div><div class='obr-sub'>Update the bite intel in a simple form, generate the daily website report, and copy or download the HTML for HubSpot.</div></div>", unsafe_allow_html=True)
+st.markdown("<div class='obr-hero'><div class='obr-kicker'>41°40′N 70°11′W · Bass River · Cape Cod</div><div class='obr-title'>Old Bass River Daily Report Editor</div><div class='obr-sub'>Update the bite intel in a simple form, generate the daily website report, and publish directly into HubSpot when configured.</div></div>", unsafe_allow_html=True)
 
 left, right = st.columns([1.0, 1.2])
 
@@ -48,20 +49,29 @@ with left:
             spot = hot_spots[idx] if idx < len(hot_spots) else {}
             with st.expander(f"Spot {idx + 1}", expanded=idx < 2):
                 zone = st.text_input(f"Zone {idx + 1}", value=spot.get("zone", ""), key=f"zone_{idx}")
-                rating = st.selectbox(f"Rating {idx + 1}", options=["Hot", "Good", "Watch", "Needs local confirmation"], index=["Hot", "Good", "Watch", "Needs local confirmation"].index(spot.get("rating", "Watch")) if spot.get("rating", "Watch") in ["Hot", "Good", "Watch", "Needs local confirmation"] else 2, key=f"rating_{idx}")
+                rating = st.selectbox(
+                    f"Rating {idx + 1}",
+                    options=["Hot", "Good", "Watch", "Needs local confirmation"],
+                    index=["Hot", "Good", "Watch", "Needs local confirmation"].index(spot.get("rating", "Watch"))
+                    if spot.get("rating", "Watch") in ["Hot", "Good", "Watch", "Needs local confirmation"]
+                    else 2,
+                    key=f"rating_{idx}",
+                )
                 species = st.text_input(f"Species {idx + 1} (comma separated)", value=", ".join(spot.get("species", [])), key=f"species_{idx}")
                 best_window = st.text_input(f"Best window {idx + 1}", value=spot.get("best_window", ""), key=f"window_{idx}")
                 access = st.text_input(f"Access {idx + 1}", value=spot.get("access", ""), key=f"access_{idx}")
                 notes = st.text_area(f"Notes {idx + 1}", value=spot.get("notes", ""), height=90, key=f"notes_{idx}")
                 if zone.strip():
-                    updated_spots.append({
-                        "zone": zone.strip(),
-                        "rating": rating,
-                        "species": [part.strip() for part in species.split(",") if part.strip()],
-                        "best_window": best_window.strip(),
-                        "access": access.strip(),
-                        "notes": notes.strip(),
-                    })
+                    updated_spots.append(
+                        {
+                            "zone": zone.strip(),
+                            "rating": rating,
+                            "species": [part.strip() for part in species.split(",") if part.strip()],
+                            "best_window": best_window.strip(),
+                            "access": access.strip(),
+                            "notes": notes.strip(),
+                        }
+                    )
 
         st.subheader("Other editable sections")
         what_is_working = st.text_area("What’s working (one item per line)", value="\n".join(editorial.get("what_is_working", [])), height=100)
@@ -87,13 +97,48 @@ with left:
 
     st.markdown("<div class='obr-note'><strong>Tip:</strong> The automated parts are conditions, tides, and news. The section that matters most for readers is still your real same-day bite intel, hot spots, bait, and access notes.</div>", unsafe_allow_html=True)
 
+    st.subheader("HubSpot publishing")
+    if config_exists():
+        st.success(f"HubSpot config found at {DEFAULT_CONFIG_PATH.name}")
+    else:
+        st.info(f"To publish directly, create {DEFAULT_CONFIG_PATH.name} from hubspot_publish.example.json and add your HubSpot values.")
+    with st.expander("What HubSpot details do I need?"):
+        st.markdown(
+            """
+- **Private app access token**
+- **Blog content group ID** for the report destination
+- **Author ID** for the post owner
+- Optional **tag IDs** and **existing post ID** if you want to update one fixed post instead of creating a new daily one
+
+Right now the integration targets **HubSpot blog-post publishing**, which is the cleanest fit for a daily report.
+            """
+        )
+
 with right:
-    if st.button("Generate fresh report", use_container_width=True):
-        bundle = build_report_bundle(st.session_state.editorial)
-        paths = write_outputs(bundle)
-        st.session_state.bundle = bundle
-        st.session_state.paths = paths
-        st.success(f"Generated {paths['markdown'].name} and {paths['html'].name}")
+    top_left, top_right = st.columns(2)
+
+    with top_left:
+        if st.button("Generate fresh report", use_container_width=True):
+            bundle = build_report_bundle(st.session_state.editorial)
+            paths = write_outputs(bundle)
+            st.session_state.bundle = bundle
+            st.session_state.paths = paths
+            st.success(f"Generated {paths['markdown'].name} and {paths['html'].name}")
+
+    with top_right:
+        if st.button("Publish to HubSpot", use_container_width=True):
+            bundle = build_report_bundle(st.session_state.editorial)
+            paths = write_outputs(bundle)
+            st.session_state.bundle = bundle
+            st.session_state.paths = paths
+            try:
+                result = publish_bundle(bundle)
+            except HubSpotPublishError as exc:
+                st.error(f"HubSpot publish failed: {exc}")
+            else:
+                st.success(f"HubSpot {result.action}: {result.object_id}")
+                if result.url:
+                    st.write(result.url)
 
     if "bundle" not in st.session_state:
         st.session_state.bundle = build_report_bundle(st.session_state.editorial)

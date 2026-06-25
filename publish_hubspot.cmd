@@ -8,4 +8,4 @@ if errorlevel 1 (
   exit /b 1
 )
 
-python generate_daily_report.py %*
+python generate_daily_report.py --publish-hubspot
