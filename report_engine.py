@@ -36,6 +36,13 @@ NEWS_KEYWORDS = (
     "offshore",
     "charter",
 )
+WEATHER_MAP_URL = (
+    "https://embed.windy.com/embed2.html?lat=41.665&lon=-70.1833&detailLat=41.665&detailLon=-70.1833"
+    "&width=900&height=520&zoom=9&level=surface&overlay=radar&product=ecmwf&menu=&message=true"
+    "&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=mph"
+    "&metricTemp=%C2%B0F&radarRange=-1"
+)
+WEATHER_MAP_PAGE_URL = "https://www.windy.com/41.665/-70.1833?radar,41.665,-70.1833,9"
 
 
 @dataclass
@@ -264,6 +271,9 @@ def build_markdown(editorial: dict[str, Any], snapshot: MarineSnapshot, tides: l
         f"- Wave height: {fmt_num(wave_ft, 'ft')} at {fmt_num(snapshot.wave_period_s, 's')} from {cardinal(snapshot.wave_direction_deg)}",
         f"- Sunrise / Sunset: {format_clock(snapshot.sunrise)} / {format_clock(snapshot.sunset)}",
         "",
+        "## Live weather map",
+        f"- Interactive radar and weather map: {WEATHER_MAP_PAGE_URL}",
+        "",
         "## Hottest spots right now",
     ]
 
@@ -387,6 +397,8 @@ a {{ color:var(--ink); }}
 .obr-stat {{ border:1px solid var(--line); padding:14px; border-radius:14px; background:var(--card); }}
 .obr-stat-label {{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; color:var(--muted); }}
 .obr-stat-value {{ margin-top:6px; font-size:24px; font-weight:700; }}
+.obr-map-frame {{ width:100%; min-height:520px; border:1px solid var(--line); border-radius:16px; background:var(--card); }}
+.obr-map-note {{ color:var(--muted); font-size:14px; margin-top:8px; }}
 </style>
 </head>
 <body>
@@ -407,6 +419,12 @@ a {{ color:var(--ink); }}
   <div class='obr-section'>
     <h2>Today’s quick read</h2>
     <ul class='obr-list'>{quick_html}</ul>
+  </div>
+
+  <div class='obr-section'>
+    <h2>Live weather map</h2>
+    <iframe class='obr-map-frame' src='{WEATHER_MAP_URL}' title='Bass River live weather map'></iframe>
+    <p class='obr-map-note'>Interactive weather and radar view for Bass River and Nantucket Sound. <a href='{WEATHER_MAP_PAGE_URL}' target='_blank' rel='noopener'>Open full-screen map</a>.</p>
   </div>
 
   <div class='obr-section'>

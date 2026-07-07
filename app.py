@@ -6,7 +6,6 @@ from pathlib import Path
 import streamlit as st
 import streamlit.components.v1 as components
 
-from hubspot_publish import DEFAULT_CONFIG_PATH, HubSpotPublishError, config_exists, publish_bundle
 from report_engine import build_report_bundle, default_editorial, load_editorial, save_editorial, write_outputs
 
 ROOT = Path(__file__).parent
@@ -30,7 +29,7 @@ st.markdown(
 if "editorial" not in st.session_state:
     st.session_state.editorial = load_editorial() or default_editorial()
 
-st.markdown("<div class='obr-hero'><div class='obr-kicker'>41°40′N 70°11′W · Bass River · Cape Cod</div><div class='obr-title'>Old Bass River Daily Report Editor</div><div class='obr-sub'>Update the bite intel in a simple form, generate the daily website report, and publish directly into HubSpot when configured.</div></div>", unsafe_allow_html=True)
+st.markdown("<div class='obr-hero'><div class='obr-kicker'>41°40′N 70°11′W · Bass River · Cape Cod</div><div class='obr-title'>Old Bass River Daily Report Editor</div><div class='obr-sub'>Update the bite intel in a simple form and generate the daily website report with a live weather map in the preview.</div></div>", unsafe_allow_html=True)
 
 left, right = st.columns([1.0, 1.2])
 
@@ -95,50 +94,15 @@ with left:
             st.session_state.editorial = new_editorial
             st.success("Editorial inputs saved.")
 
-    st.markdown("<div class='obr-note'><strong>Tip:</strong> The automated parts are conditions, tides, and news. The section that matters most for readers is still your real same-day bite intel, hot spots, bait, and access notes.</div>", unsafe_allow_html=True)
-
-    st.subheader("HubSpot publishing")
-    if config_exists():
-        st.success(f"HubSpot config found at {DEFAULT_CONFIG_PATH.name}")
-    else:
-        st.info(f"To publish directly, create {DEFAULT_CONFIG_PATH.name} from hubspot_publish.example.json and add your HubSpot values.")
-    with st.expander("What HubSpot details do I need?"):
-        st.markdown(
-            """
-- **Private app access token**
-- **Blog content group ID** for the report destination
-- **Author ID** for the post owner
-- Optional **tag IDs** and **existing post ID** if you want to update one fixed post instead of creating a new daily one
-
-Right now the integration targets **HubSpot blog-post publishing**, which is the cleanest fit for a daily report.
-            """
-        )
+    st.markdown("<div class='obr-note'><strong>Tip:</strong> The automated parts are conditions, tides, news, and the live weather map. The section that matters most for readers is still your real same-day bite intel, hot spots, bait, and access notes.</div>", unsafe_allow_html=True)
 
 with right:
-    top_left, top_right = st.columns(2)
-
-    with top_left:
-        if st.button("Generate fresh report", use_container_width=True):
+    if st.button("Generate fresh report", use_container_width=True):
             bundle = build_report_bundle(st.session_state.editorial)
             paths = write_outputs(bundle)
             st.session_state.bundle = bundle
             st.session_state.paths = paths
             st.success(f"Generated {paths['markdown'].name} and {paths['html'].name}")
-
-    with top_right:
-        if st.button("Publish to HubSpot", use_container_width=True):
-            bundle = build_report_bundle(st.session_state.editorial)
-            paths = write_outputs(bundle)
-            st.session_state.bundle = bundle
-            st.session_state.paths = paths
-            try:
-                result = publish_bundle(bundle)
-            except HubSpotPublishError as exc:
-                st.error(f"HubSpot publish failed: {exc}")
-            else:
-                st.success(f"HubSpot {result.action}: {result.object_id}")
-                if result.url:
-                    st.write(result.url)
 
     if "bundle" not in st.session_state:
         st.session_state.bundle = build_report_bundle(st.session_state.editorial)

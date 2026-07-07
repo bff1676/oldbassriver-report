@@ -23,7 +23,7 @@ if "%DELIVERY_TO%"=="" set DELIVERY_TO=8763388762
 set TZ=America/New_York
 set GENERATOR=%~dp0generate_daily_report.py
 set PYTHON_EXE=%~dp0.venv\Scripts\python.exe
-set MESSAGE=In the oldbassriver-report workspace, run "%PYTHON_EXE%" "%GENERATOR%" --publish-hubspot-if-configured and send the generated markdown daily fishing report to the user. If HubSpot publishing is configured, mention whether the post was published successfully. Otherwise mention that the matching HTML file is ready in output\daily_report.html for HubSpot.
+set MESSAGE=In the oldbassriver-report workspace, run "%PYTHON_EXE%" "%GENERATOR%" and send the generated markdown daily fishing report to the user. Mention that the matching HTML file is ready in output\daily_report.html for the separate publishing workflow.
 
 echo [oldbassriver-report] Creating OpenClaw cron job...
 openclaw.cmd cron add --name "%JOB_NAME%" --cron "%CRON_EXPR%" --tz "%TZ%" --session isolated --announce --light-context --channel "%DELIVERY_CHANNEL%" --to "%DELIVERY_TO%" --message "%MESSAGE%" --tools exec,read --timeout-seconds 300
