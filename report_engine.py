@@ -212,17 +212,6 @@ def cardinal(degrees: float | None) -> str:
     return directions[round(degrees / 45) % 8]
 
 
-def rating_badge(value: str) -> str:
-    lower = value.lower()
-    if "hot" in lower:
-        return "🔥"
-    if "good" in lower:
-        return "✅"
-    if "watch" in lower:
-        return "👀"
-    return "⚠️"
-
-
 def boating_options(snapshot: MarineSnapshot) -> list[dict[str, str]]:
     wave_ft = feet_from_meters(snapshot.wave_height_m) or 0.0
     wind_mph = mph_from_kmh(snapshot.wind_speed_kmh) or 0.0
@@ -273,21 +262,7 @@ def build_markdown(editorial: dict[str, Any], snapshot: MarineSnapshot, tides: l
         "",
         "## Live weather map",
         f"- Interactive radar and weather map: {WEATHER_MAP_PAGE_URL}",
-        "",
-        "## Hottest spots right now",
     ]
-
-    for spot in editorial.get("hot_spots", []):
-        species = ", ".join(spot.get("species", []))
-        lines.extend(
-            [
-                f"- {rating_badge(spot.get('rating', 'Watch'))} **{spot.get('zone', 'Spot')}** ({spot.get('rating', 'Watch')})",
-                f"  - Species: {species}",
-                f"  - Best window: {spot.get('best_window', 'Check tide and light')}",
-                f"  - Access: {spot.get('access', 'Varies')}",
-                f"  - Notes: {spot.get('notes', '')}",
-            ]
-        )
 
     lines.extend(["", "## Boating options"])
     for option in boating_options(snapshot):
@@ -327,7 +302,7 @@ def build_markdown(editorial: dict[str, Any], snapshot: MarineSnapshot, tides: l
         [
             "",
             "---",
-            "This report blends public conditions data with local editorial judgment. For the hottest-spot section, same-day local intel matters more than any feed.",
+            "This report blends public conditions data with local editorial judgment. Same-day local intel still matters more than any feed.",
         ]
     )
 
@@ -335,14 +310,6 @@ def build_markdown(editorial: dict[str, Any], snapshot: MarineSnapshot, tides: l
 
 
 def build_html(editorial: dict[str, Any], snapshot: MarineSnapshot, tides: list[dict[str, str]], news: list[dict[str, str]]) -> str:
-    hot_spots_html = "".join(
-        f"<div class='obr-card'><div class='obr-card-title'>{rating_badge(spot.get('rating', 'Watch'))} {html.escape(spot.get('zone', 'Spot'))}</div>"
-        f"<div class='obr-card-meta'>{html.escape(spot.get('rating', 'Watch'))} • {html.escape(', '.join(spot.get('species', [])))}</div>"
-        f"<p><strong>Best window:</strong> {html.escape(spot.get('best_window', 'Check tide and light'))}</p>"
-        f"<p><strong>Access:</strong> {html.escape(spot.get('access', 'Varies'))}</p>"
-        f"<p>{html.escape(spot.get('notes', ''))}</p></div>"
-        for spot in editorial.get("hot_spots", [])
-    )
     boating_html = "".join(
         f"<li><strong>{html.escape(item['mode'])}:</strong> {html.escape(item['status'])} — {html.escape(item['notes'])}</li>"
         for item in boating_options(snapshot)
@@ -428,11 +395,6 @@ a {{ color:var(--ink); }}
   </div>
 
   <div class='obr-section'>
-    <h2>Hottest spots right now</h2>
-    <div class='obr-grid'>{hot_spots_html}</div>
-  </div>
-
-  <div class='obr-section'>
     <h2>Boating options</h2>
     <ul class='obr-list'>{boating_html}</ul>
     <ul class='obr-list'>{boating_notes_html}</ul>
@@ -455,7 +417,7 @@ a {{ color:var(--ink); }}
   </div>
 
   <div class='obr-section'>
-    <p><em>This report blends public conditions data with local editorial judgment. For the hottest-spot section, same-day local intel matters more than any feed.</em></p>
+    <p><em>This report blends public conditions data with local editorial judgment. Same-day local intel still matters more than any feed.</em></p>
   </div>
 </div>
 </body>

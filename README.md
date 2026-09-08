@@ -9,13 +9,12 @@ The generated HTML now leans into the current Old Bass River look:
 - IBM Plex styling
 - clean black / off-white palette
 - strong editorial headline treatment
-- card-based hot-spot layout
+- clean report sections for conditions, boating, tides, and fishing notes
 - embedded live weather map
 
 ### 2. Simple editor UI instead of hand-editing JSON
 A local Streamlit app lets you update:
 - opening note
-- hot spots
 - what is working
 - species to watch
 - boating notes
@@ -84,6 +83,6 @@ Best daily workflow:
 
 The best version of this report is a **hybrid**:
 - automated for conditions, tides, and public news
-- editorial for hot spots, bait, pattern changes, and local signal
+- editorial for bite patterns, boating context, bait movement, and local signal
 
-That keeps it useful without pretending public data alone can know where the bite is hottest.
+That keeps it useful without pretending public data alone can replace same-day local judgment.
